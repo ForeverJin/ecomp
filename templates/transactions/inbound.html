@@ -1,0 +1,61 @@
+{{define "content"}}
+<div class="page-header">
+    <h4 class="page-title"><i class="bi bi-box-arrow-in-down"></i> 入库</h4>
+</div>
+
+{{with .Data}}
+<div style="max-width:520px">
+    <div class="card">
+        <div class="card-header success">
+            <i class="bi bi-box-arrow-in-down card-icon" style="color:var(--success)"></i> 入库操作
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/transactions/inbound">
+                {{csrfField $.CSRFToken}}
+
+                <div class="form-group">
+                    <label class="form-label">元器件 <span class="required">*</span></label>
+                    <select class="form-control" name="component_id" required>
+                        <option value="">-- 请选择元器件 --</option>
+                        {{range .Components}}
+                        <option value="{{.ID}}" {{if eq (printf "%d" .ID) $.Data.SelectedCompID}}selected{{end}}>
+                            {{.Name}} - {{.Model}} (库存: {{.Quantity}})
+                        </option>
+                        {{end}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">数量 <span class="required">*</span></label>
+                    <input type="number" class="form-control" name="quantity" min="1" required placeholder="请输入入库数量">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">操作人</label>
+                    <input type="text" class="form-control" name="operator" placeholder="可选">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">原因</label>
+                    <input type="text" class="form-control" name="reason" placeholder="如: 采购入库">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" name="notes" rows="2" placeholder="可选"></textarea>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check"></i> 确认入库
+                    </button>
+                    <a href="/transactions/lcsc" class="btn">
+                        <i class="bi bi-file-earmark-arrow-up"></i> 立创订单导入
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+{{end}}

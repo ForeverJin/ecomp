@@ -1,0 +1,16 @@
+ => [builder 2/6] WORKDIR /build                                                                                                        0.1s
+ => [builder 3/6] COPY go.mod go.sum ./                                                                                                 0.0s
+ => ERROR [builder 4/6] RUN go mod download                                                                                             0.5s
+------
+ > [builder 4/6] RUN go mod download:
+0.508 go: go.mod requires go >= 1.24.0 (running go 1.22.12; GOTOOLCHAIN=local)
+------
+Dockerfile:7
+--------------------
+   5 |     
+   6 |     COPY go.mod go.sum ./
+   7 | >>> RUN go mod download
+   8 |     
+   9 |     COPY . .
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c go mod download" did not complete successfully: exit code: 1

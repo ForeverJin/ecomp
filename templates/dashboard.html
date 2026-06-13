@@ -1,0 +1,249 @@
+{{define "content"}}
+{{with .Data}}
+<!-- 统计卡片 - 4列 -->
+<div class="dash-stats">
+    <div class="dash-stat-card">
+        <div class="dash-stat-icon-wrap blue">
+            <i class="bi bi-archive-fill"></i>
+        </div>
+        <div class="dash-stat-info">
+            <div class="dash-stat-value">{{.Stats.TotalTypes}}</div>
+            <div class="dash-stat-label">元器件种类</div>
+        </div>
+    </div>
+    <div class="dash-stat-card">
+        <div class="dash-stat-icon-wrap green">
+            <i class="bi bi-box-seam"></i>
+        </div>
+        <div class="dash-stat-info">
+            <div class="dash-stat-value">{{.Stats.TotalQuantity}}</div>
+            <div class="dash-stat-label">总库存量</div>
+        </div>
+    </div>
+    <div class="dash-stat-card">
+        <div class="dash-stat-icon-wrap amber">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <div class="dash-stat-info">
+            <div class="dash-stat-value">{{.Stats.LowStockCount}}</div>
+            <div class="dash-stat-label">低库存预警</div>
+        </div>
+    </div>
+    <div class="dash-stat-card">
+        <div class="dash-stat-icon-wrap red">
+            <i class="bi bi-x-octagon-fill"></i>
+        </div>
+        <div class="dash-stat-info">
+            <div class="dash-stat-value">{{.Stats.OutStockCount}}</div>
+            <div class="dash-stat-label">缺货元器件</div>
+        </div>
+    </div>
+</div>
+
+<!-- 工具栏：搜索 + 操作 -->
+<div class="dash-toolbar">
+    <div class="dash-search-input">
+        <i class="bi bi-search"></i>
+        <input type="text" id="searchInput" placeholder="搜索元器件名称、型号、位置..." class="dash-input">
+    </div>
+    <div class="dash-toolbar-actions">
+        <a href="/transactions/lcsc" class="btn btn-ghost">
+            <i class="bi bi-file-earmark-arrow-up"></i> 立创导入
+        </a>
+        <a href="/transactions/inbound" class="btn btn-ghost">
+            <i class="bi bi-box-arrow-in-down"></i> 入库
+        </a>
+        <a href="/components/new" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新增元器件
+        </a>
+    </div>
+</div>
+
+<!-- 筛选标签 -->
+<div class="dash-chips">
+    <div class="dash-chip-group">
+        <span class="dash-chip-label">封装</span>
+        <span class="dash-chip active">全部</span>
+        <span class="dash-chip">0402</span>
+        <span class="dash-chip">0603</span>
+        <span class="dash-chip">0805</span>
+        <span class="dash-chip">SOT-23</span>
+        <span class="dash-chip">LQFP</span>
+    </div>
+    <div class="dash-chip-divider"></div>
+    <div class="dash-chip-group">
+        <span class="dash-chip-label">库存</span>
+        <span class="dash-chip active">全部</span>
+        <span class="dash-chip chip-ok">正常</span>
+        <span class="dash-chip chip-warn">低库存</span>
+        <span class="dash-chip chip-danger">缺货</span>
+    </div>
+</div>
+
+<!-- 元器件表格 -->
+<div class="dash-card">
+    <div class="dash-card-header">
+        <div class="dash-card-title">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span>元器件库存</span>
+            <span class="dash-count-badge">{{.Stats.TotalTypes}}</span>
+        </div>
+        <div class="dash-card-tools">
+            <button class="icon-btn" title="刷新"><i class="bi bi-arrow-clockwise"></i></button>
+            <button class="icon-btn" title="筛选"><i class="bi bi-funnel"></i></button>
+        </div>
+    </div>
+    <div class="dash-card-body">
+        {{if not .Components}}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>暂无元器件，点击上方"新增元器件"添加</p>
+        </div>
+        {{else}}
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:40px"><input type="checkbox" class="form-check-input" onclick="toggleAll(this)"></th>
+                        <th style="width:50px">#</th>
+                        <th>名称</th>
+                        <th>型号</th>
+                        <th>封装</th>
+                        <th>数量</th>
+                        <th>位置</th>
+                        <th>状态</th>
+                        <th style="width:110px;text-align:right">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="compTableBody">
+                    {{range $i, $c := .Components}}
+                    <tr data-name="{{$c.Name}}" data-model="{{$c.Model}}" data-location="{{$c.Location}}" data-qty="{{$c.Quantity}}">
+                        <td><input type="checkbox" class="form-check-input row-check"></td>
+                        <td class="row-index text-muted">{{$c.ID}}</td>
+                        <td>
+                            <a href="/components/{{$c.ID}}" class="comp-name">
+                                <i class="bi bi-circle-fill comp-dot"></i>{{$c.Name}}
+                            </a>
+                        </td>
+                        <td><span class="cell-tag">{{$c.Model}}</span></td>
+                        <td><span class="cell-tag">{{$c.Package}}</span></td>
+                        <td>
+                            {{if eq $c.Quantity 0}}
+                            <span class="qty-pill qty-zero">0</span>
+                            {{else if le $c.Quantity 5}}
+                            <span class="qty-pill qty-low">{{$c.Quantity}}</span>
+                            {{else}}
+                            <span class="qty-pill qty-ok">{{$c.Quantity}}</span>
+                            {{end}}
+                        </td>
+                        <td class="text-muted">
+                            {{if $c.Location}}<i class="bi bi-geo-alt text-tertiary"></i> {{$c.Location}}{{else}}<span class="text-tertiary">—</span>{{end}}
+                        </td>
+                        <td>
+                            {{if eq $c.Quantity 0}}
+                            <span class="status-pill status-out"><i class="bi bi-circle-fill" style="font-size:6px"></i> 缺货</span>
+                            {{else if le $c.Quantity 5}}
+                            <span class="status-pill status-low"><i class="bi bi-circle-fill" style="font-size:6px"></i> 低库存</span>
+                            {{else}}
+                            <span class="status-pill status-ok"><i class="bi bi-circle-fill" style="font-size:6px"></i> 正常</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            <div class="action-links">
+                                <a href="/components/{{$c.ID}}/edit" class="icon-action edit" title="编辑">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/transactions/inbound?component_id={{$c.ID}}" class="icon-action in" title="入库">
+                                    <i class="bi bi-box-arrow-in-down"></i>
+                                </a>
+                                <a href="/transactions/outbound?component_id={{$c.ID}}" class="icon-action out" title="出库">
+                                    <i class="bi bi-box-arrow-up"></i>
+                                </a>
+                                <form method="POST" action="/components/{{$c.ID}}/delete" style="display:inline" onsubmit="return confirm('确定删除「{{$c.Name}}」？')">
+                                    {{csrfField $.CSRFToken}}
+                                    <button type="submit" class="icon-action del" title="删除">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+        {{end}}
+    </div>
+</div>
+
+<!-- 双栏：预警 + 最近操作 -->
+<div class="dash-grid-2">
+    {{if or .OutStock .LowStock}}
+    <div class="dash-card">
+        <div class="dash-card-header warn">
+            <div class="dash-card-title">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>库存预警</span>
+                <span class="dash-count-badge warn">{{add (len .OutStock) (len .LowStock)}}</span>
+            </div>
+        </div>
+        <div class="dash-card-body">
+            <div class="alert-list">
+                {{range .OutStock}}
+                <div class="alert-row danger">
+                    <div class="alert-row-icon"><i class="bi bi-x-circle"></i></div>
+                    <div class="alert-row-body">
+                        <div class="alert-row-title"><a href="/components/{{.ID}}">{{.Name}}</a></div>
+                        <div class="alert-row-sub">{{.Model}} · 位置 {{if .Location}}{{.Location}}{{else}}未指定{{end}}</div>
+                    </div>
+                    <span class="status-pill status-out">缺货</span>
+                </div>
+                {{end}}
+                {{range .LowStock}}
+                <div class="alert-row warn">
+                    <div class="alert-row-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                    <div class="alert-row-body">
+                        <div class="alert-row-title"><a href="/components/{{.ID}}">{{.Name}}</a></div>
+                        <div class="alert-row-sub">{{.Model}} · 剩余 {{.Quantity}}</div>
+                    </div>
+                    <span class="status-pill status-low">低库存</span>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    {{end}}
+
+    {{if .Recent}}
+    <div class="dash-card">
+        <div class="dash-card-header">
+            <div class="dash-card-title">
+                <i class="bi bi-clock-history"></i>
+                <span>最近操作</span>
+            </div>
+            <a href="/transactions/history" class="link-more">查看全部 <i class="bi bi-chevron-right"></i></a>
+        </div>
+        <div class="dash-card-body">
+            <div class="activity-list">
+                {{range .Recent}}
+                <div class="activity-row">
+                    <div class="activity-dot {{if eq .Type "inbound"}}in{{else}}out{{end}}">
+                        <i class="bi {{if eq .Type "inbound"}}bi-box-arrow-in-down{{else}}bi-box-arrow-up{{end}}"></i>
+                    </div>
+                    <div class="activity-body">
+                        <div class="activity-title">
+                            <span class="activity-type {{if eq .Type "inbound"}}in{{else}}out{{end}}">{{if eq .Type "inbound"}}入库{{else}}出库{{end}}</span>
+                            <a href="/components/{{.ComponentID}}">{{.CompName}}</a>
+                            <span class="activity-qty {{if eq .Type "inbound"}}in{{else}}out{{end}}">{{if eq .Type "inbound"}}+{{else}}-{{end}}{{.Quantity}}</span>
+                        </div>
+                        <div class="activity-time">{{.CreatedAt | formatDate}}</div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    {{end}}
+</div>
+{{end}}
+{{end}}

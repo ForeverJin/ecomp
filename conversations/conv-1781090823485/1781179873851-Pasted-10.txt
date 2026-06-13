@@ -1,0 +1,15 @@
+ => ERROR [builder 4/6] RUN go mod download                                                                                             1.0s
+------                                                                                                                                       
+ > [builder 4/6] RUN go mod download:                                                                                                        
+0.986 go: filippo.io/edwards25519@v1.2.0: module filippo.io/edwards25519@v1.2.0 requires go >= 1.24.0 (running go 1.22.12; GOTOOLCHAIN=local)
+------
+Dockerfile:7
+--------------------
+   5 |     
+   6 |     COPY go.mod go.sum ./
+   7 | >>> RUN go mod download
+   8 |     
+   9 |     COPY . .
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c go mod download" did not complete successfully: exit code: 1
+MrQiang@fnOS-3500U:/vol1/1000/docker/ecomp—build$ 

@@ -1,0 +1,13 @@
+services:
+  ecomp:
+    image: ecomp:latest
+    container_name: ecomp
+    ports:
+      - "5000:5000"
+    volumes:
+      - /vol1/1000/docker/ecomp:/app/data
+    environment:
+      - SECRET_KEY=change-me-to-a-random-string
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

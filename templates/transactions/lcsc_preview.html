@@ -1,0 +1,90 @@
+{{define "content"}}
+<div class="page-header">
+    <h4 class="page-title"><i class="bi bi-file-earmark-check"></i> 确认导入</h4>
+</div>
+
+{{with .Data}}
+<div class="alert alert-info mb-4">
+    <i class="bi bi-info-circle"></i>
+    解析结果：共 <strong>{{.TotalItems}}</strong> 个元器件
+    （已有 <strong>{{.ExistingCount}}</strong> 个匹配，新增 <strong>{{.NewCount}}</strong> 个）
+</div>
+
+<div class="card">
+    <form method="POST" action="/transactions/lcsc/confirm">
+        {{csrfField $.CSRFToken}}
+        <input type="hidden" name="items_data" value="{{.ItemsData}}">
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:40px">
+                            <input type="checkbox" class="form-check-input" id="selectAll" checked onchange="toggleAll(this)">
+                        </th>
+                        <th>名称</th>
+                        <th>型号</th>
+                        <th>封装</th>
+                        <th>数量</th>
+                        <th>状态</th>
+                        <th>当前库存</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Items}}
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="form-check-input item-check" name="item_{{.Index}}" value="on" checked>
+                        </td>
+                        <td>{{.Name}}</td>
+                        <td>{{.Model}}</td>
+                        <td>{{if .Package}}<span class="tag tag-default">{{.Package}}</span>{{else}}-{{end}}</td>
+                        <td>{{.Quantity}}</td>
+                        <td>
+                            {{if eq .MatchType "existing"}}
+                            <span class="tag tag-success">入库</span>
+                            {{else}}
+                            <span class="tag tag-info">新增</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if eq .MatchType "existing"}}
+                            <span class="badge-count badge-default">{{.CurrentQty}}</span>
+                            {{else}}
+                            <span class="text-muted">-</span>
+                            {{end}}
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-body flex justify-between items-center" style="border-top:1px solid var(--border-light)">
+            <span id="selectedCount" class="text-muted text-sm">已选 {{.TotalItems}} 个</span>
+            <div class="flex gap-2">
+                <a href="/transactions/lcsc" class="btn">返回</a>
+                <button type="submit" class="btn btn-primary" id="confirmBtn">
+                    <i class="bi bi-check"></i> 确认导入 (<span id="confirmCount">{{.TotalItems}}</span>)
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{{end}}
+
+<script>
+function toggleAll(el) {
+    document.querySelectorAll('.item-check').forEach(function(cb) { cb.checked = el.checked; });
+    updateCount();
+}
+function updateCount() {
+    var n = document.querySelectorAll('.item-check:checked').length;
+    document.getElementById('selectedCount').textContent = '已选 ' + n + ' 个';
+    document.getElementById('confirmCount').textContent = n;
+}
+document.querySelectorAll('.item-check').forEach(function(cb) {
+    cb.addEventListener('change', updateCount);
+});
+</script>
+{{end}}

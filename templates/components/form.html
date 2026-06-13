@@ -1,0 +1,70 @@
+{{define "content"}}
+{{with .Data}}
+<div class="page-header">
+    <h4 class="page-title">
+        <a href="/components" class="text-muted" style="text-decoration:none"><i class="bi bi-archive"></i></a>
+        {{if .IsEdit}}编辑元器件{{else}}新增元器件{{end}}
+    </h4>
+</div>
+
+<div style="max-width:640px">
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{if .IsEdit}}/components/{{.Component.ID}}/edit{{else}}/components/add{{end}}">
+                {{csrfField $.CSRFToken}}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">名称 <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="name" value="{{.Component.Name}}" placeholder="如: 100Ω 电阻">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">型号 <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="model" value="{{.Component.Model}}" placeholder="如: 0603WAF1000JT5E">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">封装</label>
+                            <input type="text" class="form-control" name="package" value="{{.Component.Package}}" placeholder="如: 0603, SOT-23">
+                        </div>
+                    </div>
+                    {{if not .IsEdit}}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">初始数量</label>
+                            <input type="number" class="form-control" name="quantity" value="{{.Component.Quantity}}" min="0">
+                            <div class="form-hint">如需入库，也可创建后通过入库功能添加</div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">存放位置</label>
+                    <input type="text" class="form-control" name="location" value="{{.Component.Location}}" placeholder="如: 抽屉A-3">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" name="notes" rows="3">{{.Component.Notes}}</textarea>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check"></i> {{if .IsEdit}}保存{{else}}创建{{end}}
+                    </button>
+                    <a href="/components" class="btn">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+{{end}}

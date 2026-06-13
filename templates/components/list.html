@@ -1,0 +1,84 @@
+{{define "content"}}
+<div class="page-header">
+    <h4 class="page-title"><i class="bi bi-archive"></i> 元器件列表</h4>
+    <a href="/components/add" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> 新增
+    </a>
+</div>
+
+{{with .Data}}
+<!-- 搜索 -->
+<form method="GET" action="/components" class="mb-4">
+    <div class="input-group">
+        <input type="text" class="form-control" name="q" value="{{.Search}}" placeholder="搜索名称、型号、位置、封装...">
+        <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+        {{if .Search}}<a href="/components" class="btn">清除</a>{{end}}
+    </div>
+</form>
+
+<!-- 列表 -->
+{{if not .Components}}
+<div class="empty-state">
+    <i class="bi bi-archive"></i>
+    <p>暂无元器件{{if .Search}}，试试其他关键词{{end}}</p>
+</div>
+{{else}}
+<div class="card">
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>型号</th>
+                    <th>封装</th>
+                    <th>数量</th>
+                    <th>位置</th>
+                    <th style="width:120px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Components}}
+                <tr>
+                    <td><a href="/components/{{.ID}}">{{.Name}}</a></td>
+                    <td>{{.Model}}</td>
+                    <td>{{if .Package}}<span class="tag tag-default">{{.Package}}</span>{{else}}-{{end}}</td>
+                    <td>
+                        <span class="tag {{if eq .Quantity 0}}tag-error{{else if le .Quantity 5}}tag-warning{{else}}tag-success{{end}}">
+                            {{.Quantity}}
+                        </span>
+                    </td>
+                    <td>{{.Location}}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <a href="/components/{{.ID}}/edit" class="btn btn-sm" title="编辑">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger" title="删除"
+                                    onclick="confirmDelete({{.ID}}, '{{$.CSRFToken}}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="mt-2 text-muted text-sm">共 {{len .Components}} 种元器件</div>
+{{end}}
+{{end}}
+
+<script>
+function confirmDelete(id, token) {
+    if (confirm('确定要删除这个元器件吗？')) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/components/' + id + '/delete';
+        form.innerHTML = '<input type="hidden" name="csrf_token" value="' + token + '">';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{{end}}

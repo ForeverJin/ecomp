@@ -1,0 +1,89 @@
+{{define "content"}}
+{{with .Data}}
+<div class="page-header">
+    <h4 class="page-title">
+        <a href="/components" class="text-muted" style="text-decoration:none"><i class="bi bi-archive"></i></a>
+        {{.Component.Name}}
+    </h4>
+    <div class="flex gap-2">
+        <a href="/transactions/inbound?component_id={{.Component.ID}}" class="btn btn-success btn-sm">
+            <i class="bi bi-box-arrow-in-down"></i> 入库
+        </a>
+        <a href="/transactions/outbound?component_id={{.Component.ID}}" class="btn btn-danger btn-sm">
+            <i class="bi bi-box-arrow-up"></i> 出库
+        </a>
+        <a href="/components/{{.Component.ID}}/edit" class="btn btn-sm">
+            <i class="bi bi-pencil"></i> 编辑
+        </a>
+    </div>
+</div>
+
+<!-- 基本信息 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <table class="desc-list">
+                    <tr><td class="label">型号</td><td>{{.Component.Model}}</td></tr>
+                    <tr><td class="label">封装</td><td>{{if .Component.Package}}<span class="tag tag-default">{{.Component.Package}}</span>{{else}}-{{end}}</td></tr>
+                    <tr><td class="label">数量</td>
+                        <td>
+                            <span class="badge-count {{if eq .Component.Quantity 0}}badge-danger{{else if le .Component.Quantity 5}}badge-warning{{else}}badge-success{{end}}" style="font-size:14px;min-width:32px;height:24px;border-radius:4px">
+                                {{.Component.Quantity}}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="desc-list">
+                    <tr><td class="label">位置</td><td>{{if .Component.Location}}{{.Component.Location}}{{else}}-{{end}}</td></tr>
+                    <tr><td class="label">备注</td><td>{{if .Component.Notes}}{{.Component.Notes}}{{else}}-{{end}}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="desc-list">
+                    <tr><td class="label">创建时间</td><td class="text-sm text-muted">{{.Component.CreatedAt | formatDate}}</td></tr>
+                    <tr><td class="label">更新时间</td><td class="text-sm text-muted">{{.Component.UpdatedAt | formatDate}}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 出入库记录 -->
+<div class="card">
+    <div class="card-header">
+        <i class="bi bi-clock-history"></i> 出入库记录
+    </div>
+    <div class="p-0">
+        {{if not .Transactions}}
+        <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>暂无记录</p>
+        </div>
+        {{else}}
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr><th>时间</th><th>类型</th><th>数量</th><th>操作人</th><th>原因</th><th>备注</th></tr>
+                </thead>
+                <tbody>
+                    {{range .Transactions}}
+                    <tr>
+                        <td class="text-sm text-muted">{{.CreatedAt | formatDate}}</td>
+                        <td><span class="tag {{if eq .Type "inbound"}}tag-success{{else}}tag-error{{end}}">{{.Type | typeLabel}}</span></td>
+                        <td>{{if eq .Type "inbound"}}<span class="text-success">+{{.Quantity}}</span>{{else}}<span class="text-danger">-{{.Quantity}}</span>{{end}}</td>
+                        <td>{{if .Operator}}{{.Operator}}{{else}}<span class="text-muted">-</span>{{end}}</td>
+                        <td>{{if .Reason}}{{.Reason}}{{else}}<span class="text-muted">-</span>{{end}}</td>
+                        <td>{{if .Notes}}{{.Notes}}{{else}}<span class="text-muted">-</span>{{end}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+{{end}}

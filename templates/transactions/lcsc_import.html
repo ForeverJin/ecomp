@@ -1,0 +1,41 @@
+{{define "content"}}
+<div class="page-header">
+    <h4 class="page-title"><i class="bi bi-file-earmark-arrow-up"></i> 立创商城订单导入</h4>
+</div>
+
+<div style="max-width:520px">
+    <div class="card">
+        <div class="card-header info">
+            <i class="bi bi-file-earmark-arrow-up" style="color:var(--primary)"></i> 上传订单文件
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/transactions/lcsc" enctype="multipart/form-data">
+                {{csrfField .CSRFToken}}
+
+                <div class="form-group">
+                    <label class="form-label">选择订单文件</label>
+                    <input type="file" class="form-control" name="file" accept=".xls,.xlsx" required>
+                    <div class="form-hint">支持 .xls 和 .xlsx 格式的立创商城订单详情文件</div>
+                </div>
+
+                <div class="alert alert-info mt-3">
+                    <i class="bi bi-info-circle"></i>
+                    <div>
+                        <strong>导入说明：</strong>
+                        <ul style="margin:4px 0 0 16px;padding:0">
+                            <li>已有元器件（按型号匹配）自动入库</li>
+                            <li>新元器件自动创建并入库</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload"></i> 上传并解析
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
