@@ -12,51 +12,51 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 {{template "head" .}}
-<body>
+<body class="page-{{.ActivePage}}">
 <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
-            <i class="bi bi-cpu-fill"></i>
-            <span>Ecomp</span>
+            <i class="bi bi-box-seam"></i>
+            <span>INV-COMP</span>
         </div>
         <nav class="sidebar-nav">
             <ul class="sidebar-menu">
                 {{if .Configured}}
                 <li>
                     <a href="/" class="sidebar-menu-item {{if eq .ActivePage "dashboard"}}active{{end}}">
-                        <i class="bi bi-speedometer2"></i> <span>首页</span>
+                        <i class="bi bi-house-door"></i> <span>Dashboard</span>
                     </a>
                 </li>
                 <li>
                     <a href="/components" class="sidebar-menu-item {{if eq .ActivePage "components"}}active{{end}}">
-                        <i class="bi bi-archive"></i> <span>元器件</span>
+                        <i class="bi bi-grid-3x3-gap"></i> <span>Component</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/inbound" class="sidebar-menu-item {{if eq .ActivePage "inbound"}}active{{end}}">
-                        <i class="bi bi-box-arrow-in-down"></i> <span>入库</span>
+                        <i class="bi bi-box-arrow-in-down"></i> <span>Move In</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/lcsc" class="sidebar-menu-item {{if eq .ActivePage "lcsc"}}active{{end}}">
-                        <i class="bi bi-file-earmark-arrow-up"></i> <span>立创导入</span>
+                        <i class="bi bi-layers"></i> <span>Package</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/outbound" class="sidebar-menu-item {{if eq .ActivePage "outbound"}}active{{end}}">
-                        <i class="bi bi-box-arrow-up"></i> <span>出库</span>
+                        <i class="bi bi-box-arrow-up"></i> <span>Move Out</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/history" class="sidebar-menu-item {{if eq .ActivePage "history"}}active{{end}}">
-                        <i class="bi bi-clock-history"></i> <span>记录</span>
+                        <i class="bi bi-kanban"></i> <span>Project</span>
                     </a>
                 </li>
                 {{end}}
                 <li>
                     <a href="/settings" class="sidebar-menu-item {{if eq .ActivePage "settings"}}active{{end}}">
-                        <i class="bi bi-gear"></i> <span>设置</span>
+                        <i class="bi bi-gear"></i> <span>Settings</span>
                     </a>
                 </li>
             </ul>
@@ -74,12 +74,14 @@
                     <i class="bi bi-list"></i>
                 </button>
                 <nav class="breadcrumb">
-                    <a href="/">Ecomp</a>
+                    <a href="/">COMPONENT LOGISTICS PORTAL</a>
                     <span class="sep">/</span>
                     <span class="current">{{.Title}}</span>
                 </nav>
             </div>
             <div class="header-actions">
+                <button class="icon-btn header-icon" title="Apps"><i class="bi bi-grid"></i></button>
+                <button class="icon-btn header-icon" title="Notifications"><i class="bi bi-bell"></i></button>
                 <a href="/settings" class="btn btn-sm">
                     <i class="bi bi-gear"></i> 设置
                 </a>

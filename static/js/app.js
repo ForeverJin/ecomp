@@ -9,6 +9,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 5000);
     });
+
+    var searchInput = document.getElementById('searchInput');
+    var tableBody = document.getElementById('compTableBody');
+    if (searchInput && tableBody) {
+        searchInput.addEventListener('input', function() {
+            var keyword = searchInput.value.trim().toLowerCase();
+            tableBody.querySelectorAll('tr').forEach(function(row) {
+                var haystack = [
+                    row.dataset.name,
+                    row.dataset.model,
+                    row.dataset.location,
+                    row.dataset.package
+                ].join(' ').toLowerCase();
+                row.style.display = haystack.indexOf(keyword) === -1 ? 'none' : '';
+            });
+        });
+    }
 });
 
 // Sidebar toggle (mobile)
@@ -21,6 +38,12 @@ function toggleSidebar() {
     if (overlay) {
         overlay.classList.toggle('active');
     }
+}
+
+function toggleAll(source) {
+    document.querySelectorAll('.row-check').forEach(function(checkbox) {
+        checkbox.checked = source.checked;
+    });
 }
 
 // Close sidebar when clicking outside on mobile
