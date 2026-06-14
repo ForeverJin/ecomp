@@ -43,7 +43,7 @@
   --header-border: #3A3A50;
 
   --header-h: 56px;
-  --sidebar-w: 220px;
+  --sidebar-w: 126px;
   --radius: 0;
   --radius-lg: 0;
   --shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -83,18 +83,19 @@ img { max-width: 100%; }
   border-right: 1px solid var(--border);
 }
 .sidebar-logo {
-  height: var(--header-h);
+  height: 36px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  gap: 10px;
+  justify-content: flex-start;
+  padding: 0 12px;
+  gap: 7px;
   border-bottom: 1px solid var(--border);
 }
-.sidebar-logo i { font-size: 22px; color: var(--accent); filter: drop-shadow(0 0 6px rgba(212,168,67,0.4)); }
+.sidebar-logo i { font-size: 17px; color: var(--accent); filter: drop-shadow(0 0 6px rgba(212,168,67,0.4)); }
 .sidebar-logo span {
   color: #fff;
-  font-size: 18px;
+  font-size: 11px;
+  letter-spacing: 0.8px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -103,16 +104,16 @@ img { max-width: 100%; }
 .sidebar-menu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 24px 0 48px;
-  height: 44px;
+  gap: 8px;
+  padding: 0 10px;
+  height: 30px;
   cursor: pointer;
-  color: var(--sidebar-item);
+  color: #8290a1;
   transition: var(--transition);
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 500;
   text-decoration: none;
-  border-left: 3px solid transparent;
+  border-left: 2px solid transparent;
 }
 .sidebar-menu-item:hover {
   background: rgba(255,255,255,0.04);
@@ -125,7 +126,7 @@ img { max-width: 100%; }
   border-left: 3px solid var(--accent);
 }
 .sidebar-menu-item.active i { color: var(--accent); }
-.sidebar-menu-item i { font-size: 18px; width: 22px; text-align: center; }
+.sidebar-menu-item i { font-size: 11px; width: 16px; text-align: center; }
 
 /* --- Main --- */
 .main {
@@ -158,7 +159,7 @@ img { max-width: 100%; }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 
 /* --- Content --- */
-.content { flex: 1; padding: 24px; }
+.content { flex: 1; padding: 10px; }
 
 /* --- Buttons --- */
 .btn {
@@ -166,9 +167,9 @@ img { max-width: 100%; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 36px;
-  padding: 0 18px;
-  font-size: 14px;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
   font-family: var(--font);
   border-radius: var(--radius);
   border: none;
@@ -211,7 +212,7 @@ img { max-width: 100%; }
 }
 .btn-link:hover { color: var(--primary-hover); background: none; }
 
-.btn-sm { height: 28px; padding: 0 10px; font-size: 13px; }
+.btn-sm { height: 24px; padding: 0 8px; font-size: 11px; }
 
 .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
 .btn-outline:hover { border-color: var(--border-focus); background: var(--bg-component); }
@@ -229,9 +230,9 @@ img { max-width: 100%; }
   overflow: hidden;
 }
 .card-header {
-  padding: 14px 20px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -242,30 +243,30 @@ img { max-width: 100%; }
 .card-header.danger  { border-left: 4px solid var(--error); }
 .card-header.warning { border-left: 4px solid var(--warning); }
 .card-header.info    { border-left: 4px solid var(--primary); }
-.card-icon { font-size: 16px; }
-.card-body { padding: 20px; }
+.card-icon { font-size: 13px; }
+.card-body { padding: 12px; }
 
 /* --- Table --- */
 .table-wrap { overflow-x: auto; }
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 12px;
 }
 .table th {
-  padding: 12px 16px;
+  padding: 6px 10px;
   text-align: left;
   font-weight: 600;
   color: var(--text-secondary);
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 .table td {
-  padding: 12px 16px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--border);
   color: var(--text);
 }
@@ -283,11 +284,11 @@ img { max-width: 100%; }
 .table a:hover { color: var(--primary-hover); text-decoration: underline; }
 
 /* --- Forms --- */
-.form-group { margin-bottom: 20px; }
+.form-group { margin-bottom: 12px; }
 .form-label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
+  margin-bottom: 4px;
+  font-size: 12px;
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -296,9 +297,9 @@ img { max-width: 100%; }
 .form-control,
 select.form-control {
   width: 100%;
-  height: 38px;
-  padding: 8px 12px;
-  font-size: 14px;
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
   font-family: var(--font);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -502,21 +503,21 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 /* --- Empty State --- */
 .empty-state {
   text-align: center;
-  padding: 48px 20px;
+  padding: 24px 16px;
   color: var(--text-tertiary);
 }
-.empty-state i { font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.15; }
-.empty-state p { margin-top: 8px; font-size: 14px; }
+.empty-state i { font-size: 36px; margin-bottom: 10px; display: block; opacity: 0.15; }
+.empty-state p { margin-top: 6px; font-size: 12px; }
 
 /* --- Page Header --- */
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 .page-title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 600;
   color: #fff;
   display: flex;
@@ -814,6 +815,14 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
   transition: var(--transition); border-radius: 6px; font-size: 14px;
 }
 .icon-btn:hover { background: var(--bg-elevated); color: var(--text); }
+/* 顶部右侧 grid/铃铛 图标：统一用首页的小尺寸（22px），所有页面一致 */
+.header-icon {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  background: transparent;
+  color: #8190a0;
+}
 .dash-card-body { }
 
 /* Component name cell */
@@ -1139,16 +1148,6 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 .page-dashboard .breadcrumb .current {
   color: #8390a0;
   font-weight: 400;
-}
-.page-dashboard .header-actions .btn {
-  display: none;
-}
-.page-dashboard .header-icon {
-  width: 22px;
-  height: 22px;
-  border: 0;
-  background: transparent;
-  color: #8190a0;
 }
 .page-dashboard .content {
   padding: 8px;
