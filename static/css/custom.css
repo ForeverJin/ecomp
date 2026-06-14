@@ -1166,7 +1166,7 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 }
 .logistics-search-row {
   display: grid;
-  grid-template-columns: 1fr 36px;
+  grid-template-columns: 1fr auto;
   gap: 6px;
   margin-bottom: 6px;
 }
@@ -1183,6 +1183,14 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 }
 .logistics-search .dash-input {
   font-size: 12px;
+}
+.logistics-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.logistics-toolbar-actions .btn {
+  height: 34px;
 }
 .logistics-filter-btn {
   border: 1px solid #263344;
@@ -1258,7 +1266,7 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
   box-shadow: 0 10px 28px rgba(0,0,0,0.28), 0 1px 0 rgba(255,255,255,0.03) inset;
 }
 .inventory-table-card {
-  height: calc(100% - 145px);
+  height: calc(100% - 40px);
   overflow: hidden;
 }
 .logistics-table {
@@ -1371,7 +1379,7 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
   background: rgba(212,168,67,0.14);
 }
 .detail-panel {
-  min-height: 282px;
+  min-height: 244px;
   margin-bottom: 8px;
 }
 .panel-title {
@@ -1534,6 +1542,14 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 }
 .empty-state.compact {
   padding: 28px 12px;
+}
+@media (max-width: 640px) {
+  .logistics-search-row {
+    grid-template-columns: 1fr;
+  }
+  .logistics-toolbar-actions {
+    flex-wrap: wrap;
+  }
 }
 @media (max-width: 1180px) {
   .page-dashboard .layout {

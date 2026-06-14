@@ -5,38 +5,18 @@
         <div class="logistics-search-row">
             <div class="logistics-search">
                 <i class="bi bi-search"></i>
-                <input type="text" id="searchInput" placeholder="Search search..." class="dash-input">
+                <input type="text" id="searchInput" placeholder="搜索元器件名称、型号、封装、位置..." class="dash-input">
             </div>
-            <button class="logistics-filter-btn" title="Filter"><i class="bi bi-funnel"></i></button>
-        </div>
-
-        <div class="logistics-filter-grid">
-            <div class="filter-pane">
-                <div class="filter-title">Type</div>
-                <button class="filter-row active">ICs <i class="bi bi-chevron-right"></i></button>
-                <button class="filter-row">Discretes <i class="bi bi-chevron-right"></i></button>
-                <button class="filter-row">Passives <i class="bi bi-chevron-right"></i></button>
-            </div>
-            <div class="filter-pane">
-                <div class="filter-title">Brand</div>
-                <button class="filter-row active"><span class="brand-dot st">ST</span> ST</button>
-                <button class="filter-row"><span class="brand-dot ti">TI</span> TI</button>
-                <button class="filter-row"><span class="brand-dot on">ON</span> ON</button>
-                <button class="filter-row"><span class="brand-dot avx">AVX</span> AVX</button>
-            </div>
-            <div class="filter-pane">
-                <div class="filter-title">Package</div>
-                <button class="filter-row active">LQFP</button>
-                <button class="filter-row">SOT-23</button>
-                <button class="filter-row">0805</button>
-                <button class="filter-row">0603</button>
-            </div>
-            <div class="filter-pane">
-                <div class="filter-title">Location</div>
-                <button class="filter-row active">Bin 01, Bin 101001</button>
-                <button class="filter-row">Bin 12, Bin 101002</button>
-                <button class="filter-row">Bin 13, Bin 101003</button>
-                <button class="filter-row">Bin 14, Bin 101004</button>
+            <div class="logistics-toolbar-actions">
+                <a href="/transactions/lcsc" class="btn btn-ghost btn-sm">
+                    <i class="bi bi-file-earmark-arrow-up"></i> 导入
+                </a>
+                <a href="/transactions/inbound" class="btn btn-ghost btn-sm">
+                    <i class="bi bi-box-arrow-in-down"></i> 入库
+                </a>
+                <a href="/components/add" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> 新增
+                </a>
             </div>
         </div>
 
@@ -51,34 +31,43 @@
                 <table class="table logistics-table">
                     <thead>
                         <tr>
-                            <th style="width:34px"></th>
-                            <th style="width:78px">Stock#</th>
-                            <th>Name</th>
-                            <th style="width:78px">Loc.</th>
-                            <th style="width:116px">Qty (On Nami)</th>
-                            <th style="width:70px">Alerts</th>
-                            <th style="width:132px;text-align:right"></th>
+                            <th style="width:70px">编号</th>
+                            <th>名称</th>
+                            <th>型号</th>
+                            <th style="width:90px">封装</th>
+                            <th style="width:90px">位置</th>
+                            <th style="width:80px">数量</th>
+                            <th style="width:86px">状态</th>
+                            <th style="width:132px;text-align:right">操作</th>
                         </tr>
                     </thead>
                     <tbody id="compTableBody">
                         {{range $i, $c := .Components}}
-                        <tr class="{{if eq $i 0}}selected{{end}}" data-name="{{$c.Name}}" data-model="{{$c.Model}}" data-location="{{$c.Location}}" data-package="{{$c.Package}}" data-qty="{{$c.Quantity}}">
-                            <td><input type="checkbox" class="form-check-input row-check" {{if eq $i 0}}checked{{end}}></td>
+                        <tr data-name="{{$c.Name}}" data-model="{{$c.Model}}" data-location="{{$c.Location}}" data-package="{{$c.Package}}" data-qty="{{$c.Quantity}}">
                             <td>ESP{{$c.ID}}</td>
-                            <td><a href="/components/{{$c.ID}}" class="inventory-name">{{$c.Name}} {{if $c.Model}}({{$c.Model}}){{end}}</a></td>
-                            <td>{{if $c.Location}}{{$c.Location}}{{else}}AR.{{$c.ID}}{{end}}</td>
+                            <td><a href="/components/{{$c.ID}}" class="inventory-name">{{$c.Name}}</a></td>
+                            <td>{{if $c.Model}}{{$c.Model}}{{else}}<span class="text-muted">-</span>{{end}}</td>
+                            <td>{{if $c.Package}}{{$c.Package}}{{else}}<span class="text-muted">-</span>{{end}}</td>
+                            <td>{{if $c.Location}}{{$c.Location}}{{else}}<span class="text-muted">-</span>{{end}}</td>
                             <td>{{$c.Quantity}}</td>
                             <td>
-                                {{if le $c.Quantity 5}}<i class="bi bi-exclamation-triangle-fill alert-mark"></i>{{end}}
+                                {{if eq $c.Quantity 0}}
+                                <span class="status-pill status-out">缺货</span>
+                                {{else if le $c.Quantity 5}}
+                                <span class="status-pill status-low">低库存</span>
+                                {{else}}
+                                <span class="status-pill status-ok">正常</span>
+                                {{end}}
                             </td>
                             <td>
                                 <div class="logistics-actions">
-                                    <a href="/components/{{$c.ID}}/edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                    <a href="/transactions/inbound?component_id={{$c.ID}}" title="Move In"><i class="bi bi-file-earmark-plus"></i></a>
-                                    <a href="/components/{{$c.ID}}" title="View"><i class="bi bi-search"></i></a>
+                                    <a href="/components/{{$c.ID}}/edit" title="编辑"><i class="bi bi-pencil"></i></a>
+                                    <a href="/transactions/inbound?component_id={{$c.ID}}" title="入库"><i class="bi bi-box-arrow-in-down"></i></a>
+                                    <a href="/transactions/outbound?component_id={{$c.ID}}" title="出库"><i class="bi bi-box-arrow-up"></i></a>
+                                    <a href="/components/{{$c.ID}}" title="详情"><i class="bi bi-search"></i></a>
                                     <form method="POST" action="/components/{{$c.ID}}/delete" onsubmit="return confirm('确定删除「{{$c.Name}}」？')">
                                         {{csrfField $.CSRFToken}}
-                                        <button type="submit" title="Delete"><i class="bi bi-trash"></i></button>
+                                        <button type="submit" title="删除"><i class="bi bi-trash"></i></button>
                                     </form>
                                 </div>
                             </td>
@@ -94,78 +83,81 @@
     <aside class="logistics-right">
         <div class="metric-grid">
             <div class="metric-card">
-                <div class="metric-label">Total Stock</div>
-                <div class="metric-value">{{.Stats.TotalQuantity}}</div>
+                <div class="metric-label">元器件种类</div>
+                <div class="metric-value">{{.Stats.TotalTypes}}</div>
                 <i class="bi bi-boxes metric-icon blue"></i>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Low Stock Items</div>
-                <div class="metric-value">{{.Stats.LowStockCount}}</div>
-                <i class="bi bi-tags-fill metric-icon amber"></i>
+                <div class="metric-label">总库存量</div>
+                <div class="metric-value">{{.Stats.TotalQuantity}}</div>
+                <i class="bi bi-archive-fill metric-icon blue"></i>
             </div>
             <div class="metric-card">
-                <div class="metric-label">Value in Stock</div>
-                <div class="metric-value">$ {{.Stats.TotalTypes}}</div>
-                <div class="metric-sub">$22,179 Stock</div>
+                <div class="metric-label">低库存</div>
+                <div class="metric-value">{{.Stats.LowStockCount}}</div>
+                <i class="bi bi-exclamation-triangle-fill metric-icon amber"></i>
             </div>
         </div>
 
         <div class="detail-panel">
-            <div class="panel-title">Selected Item Details</div>
-            {{if .Components}}
-            {{range $i, $c := .Components}}
-            {{if eq $i 0}}
-            <div class="selected-item">
-                <div class="chip-preview">
-                    <div class="chip-body">
-                        <span>ST</span>
-                        <small>MICRO</small>
+            <div class="panel-title">库存预警</div>
+            {{if or .OutStock .LowStock}}
+            <div class="alert-list">
+                {{range .OutStock}}
+                <div class="alert-row danger">
+                    <div class="alert-row-icon"><i class="bi bi-x-circle"></i></div>
+                    <div class="alert-row-body">
+                        <div class="alert-row-title"><a href="/components/{{.ID}}">{{.Name}}</a></div>
+                        <div class="alert-row-sub">{{.Model}} · 位置 {{if .Location}}{{.Location}}{{else}}未指定{{end}}</div>
                     </div>
+                    <span class="status-pill status-out">缺货</span>
                 </div>
-                <div class="selected-copy">
-                    <div class="selected-name">{{$c.Name}} {{if $c.Model}}({{$c.Model}}){{end}}</div>
-                    <a href="/components/{{$c.ID}}/edit" class="edit-link"><i class="bi bi-pencil"></i></a>
-                    <dl>
-                        <dt>Photo</dt><dd>{{$c.Model}}</dd>
-                        <dt>Foodis</dt><dd>DIOGE 1NA14B</dd>
-                        <dt>Package</dt><dd>{{if $c.Package}}{{$c.Package}}{{else}}Footage{{end}}</dd>
-                        <dt>ID</dt><dd>62292,3433.17</dd>
-                    </dl>
+                {{end}}
+                {{range .LowStock}}
+                <div class="alert-row warn">
+                    <div class="alert-row-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                    <div class="alert-row-body">
+                        <div class="alert-row-title"><a href="/components/{{.ID}}">{{.Name}}</a></div>
+                        <div class="alert-row-sub">{{.Model}} · 剩余 {{.Quantity}}</div>
+                    </div>
+                    <span class="status-pill status-low">低库存</span>
                 </div>
+                {{end}}
             </div>
-
-            <div class="mini-section">
-                <div class="mini-title">Inventory by Bin</div>
-                <div class="bin-grid">
-                    <span>Bin</span><strong>{{if $c.Location}}{{$c.Location}}{{else}}1200{{end}}</strong>
-                    <span>Brands</span><strong>100</strong>
-                    <span>Project Project</span><strong>10</strong>
-                    <span>Project</span><strong>10</strong>
-                    <span>Qty</span><strong>{{$c.Quantity}}</strong>
-                    <span>Location ID</span><strong>{{$c.ID}}</strong>
-                </div>
-            </div>
-            {{end}}
-            {{end}}
             {{else}}
             <div class="empty-state compact">
-                <i class="bi bi-cpu"></i>
-                <p>No selected item</p>
+                <i class="bi bi-check-circle"></i>
+                <p>暂无库存预警</p>
             </div>
             {{end}}
         </div>
 
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="panel-title">Past Usage</div>
-                <div class="bar-chart" aria-hidden="true">
-                    <i style="height:34%"></i><i style="height:72%"></i><i style="height:42%"></i><i style="height:58%"></i><i style="height:84%"></i><i style="height:96%"></i><i style="height:40%"></i><i style="height:18%"></i><i style="height:28%"></i><i style="height:64%"></i><i style="height:70%"></i><i style="height:12%"></i>
+        <div class="detail-panel">
+            <div class="panel-title">最近操作</div>
+            {{if .Recent}}
+            <div class="activity-list">
+                {{range .Recent}}
+                <div class="activity-row">
+                    <div class="activity-dot {{if eq .Type "inbound"}}in{{else}}out{{end}}">
+                        <i class="bi {{if eq .Type "inbound"}}bi-box-arrow-in-down{{else}}bi-box-arrow-up{{end}}"></i>
+                    </div>
+                    <div class="activity-body">
+                        <div class="activity-title">
+                            <span class="activity-type {{if eq .Type "inbound"}}in{{else}}out{{end}}">{{if eq .Type "inbound"}}入库{{else}}出库{{end}}</span>
+                            <a href="/components/{{.ComponentID}}">{{.CompName}}</a>
+                            <span class="activity-qty {{if eq .Type "inbound"}}in{{else}}out{{end}}">{{if eq .Type "inbound"}}+{{else}}-{{end}}{{.Quantity}}</span>
+                        </div>
+                        <div class="activity-time">{{.CreatedAt | formatDate}}</div>
+                    </div>
                 </div>
+                {{end}}
             </div>
-            <div class="analytics-card">
-                <div class="panel-title">Stock Distribution</div>
-                <div class="donut-chart" aria-hidden="true"></div>
+            {{else}}
+            <div class="empty-state compact">
+                <i class="bi bi-clock-history"></i>
+                <p>暂无出入库记录</p>
             </div>
+            {{end}}
         </div>
     </aside>
 </div>

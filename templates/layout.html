@@ -17,46 +17,46 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
-            <i class="bi bi-box-seam"></i>
-            <span>INV-COMP</span>
+            <i class="bi bi-cpu-fill"></i>
+            <span>Ecomp</span>
         </div>
         <nav class="sidebar-nav">
             <ul class="sidebar-menu">
                 {{if .Configured}}
                 <li>
                     <a href="/" class="sidebar-menu-item {{if eq .ActivePage "dashboard"}}active{{end}}">
-                        <i class="bi bi-house-door"></i> <span>Dashboard</span>
+                        <i class="bi bi-house-door"></i> <span>首页</span>
                     </a>
                 </li>
                 <li>
                     <a href="/components" class="sidebar-menu-item {{if eq .ActivePage "components"}}active{{end}}">
-                        <i class="bi bi-grid-3x3-gap"></i> <span>Component</span>
+                        <i class="bi bi-grid-3x3-gap"></i> <span>元器件</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/inbound" class="sidebar-menu-item {{if eq .ActivePage "inbound"}}active{{end}}">
-                        <i class="bi bi-box-arrow-in-down"></i> <span>Move In</span>
+                        <i class="bi bi-box-arrow-in-down"></i> <span>入库</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/lcsc" class="sidebar-menu-item {{if eq .ActivePage "lcsc"}}active{{end}}">
-                        <i class="bi bi-layers"></i> <span>Package</span>
+                        <i class="bi bi-layers"></i> <span>立创导入</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/outbound" class="sidebar-menu-item {{if eq .ActivePage "outbound"}}active{{end}}">
-                        <i class="bi bi-box-arrow-up"></i> <span>Move Out</span>
+                        <i class="bi bi-box-arrow-up"></i> <span>出库</span>
                     </a>
                 </li>
                 <li>
                     <a href="/transactions/history" class="sidebar-menu-item {{if eq .ActivePage "history"}}active{{end}}">
-                        <i class="bi bi-kanban"></i> <span>Project</span>
+                        <i class="bi bi-kanban"></i> <span>记录</span>
                     </a>
                 </li>
                 {{end}}
                 <li>
                     <a href="/settings" class="sidebar-menu-item {{if eq .ActivePage "settings"}}active{{end}}">
-                        <i class="bi bi-gear"></i> <span>Settings</span>
+                        <i class="bi bi-gear"></i> <span>设置</span>
                     </a>
                 </li>
             </ul>
